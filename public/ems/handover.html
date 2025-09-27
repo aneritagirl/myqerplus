@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MYQER ED Handover</title>
+  <style>
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      background: #ffffff;
+      color: #1f2937;
+      line-height: 1.5;
+    }
+
+    /* Header */
+    .header {
+      background: #ffffff;
+      border-bottom: 2px solid #e5e7eb;
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 900;
+      color: #dc267f;
+      letter-spacing: 2px;
+    }
+
+    .page-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .page-subtitle {
+      font-size: 14px;
+      color: #6b7280;
+      font-weight: 500;
+      margin-top: 0.25rem;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .session-timer {
+      background: #dcfce7;
+      color: #166534;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .session-timer.amber {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .session-timer.red {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .timestamp {
+      background: #dbeafe;
+      color: #1e40af;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .myqer-code {
+      background: #dc267f;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    .dark-toggle {
+      background: #f3f4f6;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .dark-toggle:hover {
+      background: #e5e7eb;
+    }
+
+    .dark-toggle svg {
+      width: 20px;
+      height: 20px;
+      color: #6b7280;
+    }
+
+    /* Main Content */
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      min-height: calc(100vh - 120px - 60px);
+    }
+
+    /* Triage Card */
+    .triage-section {
+      margin-bottom: 2.5rem;
+    }
+
+    .triage-card {
+      padding: 2rem;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      border: 4px solid;
+      margin-bottom: 2rem;
+    }
+
+    .triage-red {
+      background: #fee2e2;
+      border-color: #ef4444;
+      color: #991b1b;
+    }
+
+    .triage-amber {
+      background: #fef3c7;
+      border-color: #f59e0b;
+      color: #78350f;
+    }
+
+    .triage-green {
+      background: #dcfce7;
+      border-color: #22c55e;
+      color: #166534;
+    }
+
+    .triage-priority {
+      font-size: 48px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin: 0;
+    }
+
+    .triage-description {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0.5rem 0 0 0;
+    }
+
+    /* Patient Info Grid */
+    .patient-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+
+    /* Hospital Blue Divider */
+    .section-divider {
+      height: 4px;
+      background: linear-gradient(90deg, #3b82f6, #60a5fa, #3b82f6);
+      border-radius: 2px;
+      margin: 2.5rem 0;
+      opacity: 0.6;
+    }
+
+    .info-card {
+      background: #ffffff;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid #f3f4f6;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .card-icon {
+      font-size: 20px;
+    }
+
+    /* Patient Snapshot */
+    .patient-name {
+      font-size: 32px;
+      font-weight: 800;
+      color: #111827;
+      margin: 0 0 0.5rem 0;
+    }
+
+    .patient-details {
+      font-size: 18px;
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .detail-label {
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .detail-value {
+      font-weight: 700;
+      color: #111827;
+    }
+
+    /* Critical Sections */
+    .critical-allergies {
+      border-left: 4px solid #ef4444;
+      background: #fef7f7;
+    }
+
+    .critical-meds {
+      border-left: 4px solid #3b82f6;
+      background: #f0f9ff;
+    }
+
+    .critical-notes {
+      border-left: 4px solid #f59e0b;
+      background: #fffbeb;
+    }
+
+    .critical-item {
+      background: #ffffff;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.5rem;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      font-weight: 600;
+    }
+
+    .allergy-severe {
+      border-left: 4px solid #ef4444;
+      background: #fee2e2;
+    }
+
+    .med-critical {
+      border-left: 4px solid #3b82f6;
+      background: #dbeafe;
+    }
+
+    /* Full Width Section */
+    .full-width-section {
+      grid-column: 1 / -1;
+      background: #f8fafc;
+      border: 2px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    /* Action Buttons */
+    .action-section {
+      margin-top: 2.5rem;
+      padding: 2.5rem;
+      background: #f8fafc;
+      border-radius: 12px;
+      border: 2px solid #e2e8f0;
+    }
+
+    .action-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+
+    .action-btn {
+      padding: 20px 24px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background: #dc267f;
+      color: white;
+      border-color: #dc267f;
+    }
+
+    .btn-primary:hover {
+      background: #be185d;
+      border-color: #be185d;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(220, 38, 127, 0.3);
+    }
+
+    .btn-secondary {
+      background: #3b82f6;
+      color: white;
+      border-color: #3b82f6;
+    }
+
+    .btn-secondary:hover {
+      background: #2563eb;
+      border-color: #2563eb;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-success {
+      background: #22c55e;
+      color: white;
+      border-color: #22c55e;
+    }
+
+    .btn-success:hover {
+      background: #16a34a;
+      border-color: #16a34a;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    }
+
+    /* Footer */
+    .footer {
+      background: #f9fafb;
+      border-top: 1px solid #e5e7eb;
+      padding: 1rem 2rem;
+      font-size: 11px;
+      color: #6b7280;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .footer-brand {
+      font-weight: 700;
+      color: #dc267f;
+    }
+
+    .footer-separator {
+      margin: 0 0.5rem;
+      color: #d1d5db;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+
+      .patient-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .action-buttons {
+        grid-template-columns: 1fr;
+      }
+
+      .triage-priority {
+        font-size: 36px;
+      }
+
+      .patient-name {
+        font-size: 24px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .main {
+        padding: 1rem;
+      }
+
+      .triage-card {
+        padding: 1.5rem;
+      }
+
+      .info-card {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">MYQER™</div>
+      <div>
+        <h1 class="page-title">ED Handover</h1>
+        <p class="page-subtitle">Confidential emergency medical summary</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="session-timer" id="sessionTimer">Session expires in 14 min</div>
+      <div class="timestamp">Received: 14:47</div>
+      <div class="myqer-code">7H3K2P</div>
+      <button class="dark-toggle" onclick="toggleDarkMode()" title="Toggle dark mode">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main">
+    <!-- Triage Priority Card -->
+    <section class="triage-section">
+      <div class="triage-card triage-amber">
+        <h2 class="triage-priority">Priority 2</h2>
+        <p class="triage-description">Urgent - Treat within 10 minutes</p>
+      </div>
+    </section>
+
+    <!-- Patient Information Grid -->
+    <div class="patient-grid">
+      <!-- Patient Snapshot -->
+      <div class="info-card">
+        <div class="card-header">
+          <span class="card-icon">👤</span>
+          <h3 class="card-title">Patient Snapshot</h3>
+        </div>
+        
+        <h2 class="patient-name">Sarah Johnson</h2>
+        <p class="patient-details">DOB: 15/03/1985 (38 years) • Female</p>
+        
+        <div class="detail-row">
+          <span class="detail-label">Blood Type:</span>
+          <span class="detail-value">O+</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">NHS Number:</span>
+          <span class="detail-value">485 777 3456</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Address:</span>
+          <span class="detail-value">42 Oak Lane, M1 2AB</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Next of Kin:</span>
+          <span class="detail-value">Mark Johnson (Husband)</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Contact:</span>
+          <span class="detail-value">07700 900123</span>
+        </div>
+      </div>
+
+      <!-- Critical Allergies -->
+      <div class="info-card critical-allergies">
+        <div class="card-header">
+          <span class="card-icon">⚠️</span>
+          <h3 class="card-title">Critical Allergies</h3>
+        </div>
+        
+        <div class="critical-item allergy-severe">
+          <strong>Penicillin</strong> - Anaphylaxis
+        </div>
+        <div class="critical-item allergy-severe">
+          <strong>Shellfish</strong> - Severe reaction, swelling
+        </div>
+        <div class="critical-item">
+          <strong>Latex</strong> - Contact dermatitis
+        </div>
+        <div class="critical-item">
+          <strong>Aspirin</strong> - Gastric bleeding risk
+        </div>
+      </div>
+
+      <!-- Key Medications -->
+      <div class="info-card critical-meds">
+        <div class="card-header">
+          <span class="card-icon">💊</span>
+          <h3 class="card-title">Current Medications</h3>
+        </div>
+        
+        <div class="critical-item med-critical">
+          <strong>Metformin 500mg</strong> - 2x daily (Diabetes)
+        </div>
+        <div class="critical-item med-critical">
+          <strong>Lisinopril 10mg</strong> - Daily (Hypertension)
+        </div>
+        <div class="critical-item">
+          <strong>Atorvastatin 20mg</strong> - Evening (Cholesterol)
+        </div>
+        <div class="critical-item">
+          <strong>Salbutamol inhaler</strong> - PRN (Asthma)
+        </div>
+        <div class="critical-item">
+          <strong>Omeprazole 20mg</strong> - Daily (GERD)
+        </div>
+      </div>
+
+      <!-- Critical Notes -->
+      <div class="info-card critical-notes full-width-section">
+        <div class="card-header">
+          <span class="card-icon">📋</span>
+          <h3 class="card-title">Critical Notes & Presenting Complaint</h3>
+        </div>
+        
+        <div class="critical-item">
+          <strong>Presenting Complaint:</strong> Chest pain, shortness of breath, onset 2 hours ago
+        </div>
+        <div class="critical-item">
+          <strong>Medical History:</strong> Type 2 Diabetes (2018), Hypertension (2020), Asthma (childhood)
+        </div>
+        <div class="critical-item">
+          <strong>Ambulance Observations:</strong> BP 165/95, HR 98, SpO2 94% on air, Temp 37.2°C
+        </div>
+        <div class="critical-item">
+          <strong>Treatment Given:</strong> Aspirin 300mg (confirmed no allergy), GTN spray x2, O2 via nasal cannula
+        </div>
+        <div class="critical-item">
+          <strong>Social History:</strong> Non-smoker, occasional alcohol, lives with husband, independent
+        </div>
+      </div>
+    </div>
+
+    <!-- Section Divider -->
+    <div class="section-divider"></div>
+
+    <!-- Action Buttons -->
+    <section class="action-section">
+      <h3 style="margin: 0 0 1.5rem 0; font-size: 20px; font-weight: 700; color: #111827; text-align: center;">
+        Handover Actions
+      </h3>
+      <div class="action-buttons">
+        <button class="action-btn btn-primary" onclick="downloadPDF()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 0.5rem;">
+            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+            <path d="M12,11L16,15H13V19H11V15H8L12,11Z"/>
+          </svg>
+          Download 1-page PDF
+        </button>
+        <button class="action-btn btn-secondary" onclick="callICE()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 0.5rem;">
+            <path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z"/>
+          </svg>
+          Call ICE Contact
+        </button>
+        <button class="action-btn btn-success" onclick="acknowledgeHandover()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 0.5rem;">
+            <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+          </svg>
+          Acknowledge Handover
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <span class="footer-brand">MYQER™</span>
+    <span class="footer-separator">–</span>
+    <span>Confidential medical information</span>
+    <span class="footer-separator">–</span>
+    <span>Access expires in 15 min</span>
+  </footer>
+
+  <script>
+    function downloadPDF() {
+      alert('Generating 1-page PDF handover summary...\n\nThis would create a printable summary with all patient details, allergies, medications, and critical notes for the medical record.');
+    }
+
+    function callICE() {
+      const contact = "Mark Johnson (Husband) - 07700 900123";
+      if (confirm(`Call emergency contact?\n\n${contact}\n\nThis will initiate a call to notify the next of kin.`)) {
+        alert('Connecting call to Mark Johnson...\n\nIn a real system, this would dial the number or connect through the hospital phone system.');
+      }
+    }
+
+    function acknowledgeHandover() {
+      if (confirm('Acknowledge handover receipt?\n\nThis confirms the ED team has received and reviewed all patient information.')) {
+        alert('Handover acknowledged successfully!\n\n✅ ED team notified\n✅ Ambulance crew can clear\n✅ Patient record updated\n\nTimestamp: ' + new Date().toLocaleTimeString());
+        
+        // Visual feedback
+        const btn = document.querySelector('.btn-success');
+        btn.style.background = '#16a34a';
+        btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 0.5rem;"><path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/></svg>Handover Complete';
+        btn.disabled = true;
+      }
+    }
+
+    function toggleDarkMode() {
+      alert('Dark mode toggle - would switch to dark theme for low-light emergency departments.');
+    }
+
+    // Session timer countdown
+    let sessionMinutes = 14;
+    const timerElement = document.getElementById('sessionTimer');
+    
+    setInterval(() => {
+      if (sessionMinutes > 0) {
+        timerElement.textContent = `Session expires in ${sessionMinutes} min`;
+        
+        // Color transitions: green (10+) → amber (5-9) → red (1-4) → expired (0)
+        if (sessionMinutes >= 10) {
+          timerElement.className = 'session-timer';
+        } else if (sessionMinutes >= 5) {
+          timerElement.className = 'session-timer amber';
+        } else if (sessionMinutes >= 1) {
+          timerElement.className = 'session-timer red';
+        }
+        
+        sessionMinutes--;
+      } else {
+        timerElement.textContent = 'Session expired';
+        timerElement.className = 'session-timer red';
+      }
+    }, 60000);
+
+    // Auto-focus on critical information for accessibility
+    document.addEventListener('DOMContentLoaded', function() {
+      // Highlight critical allergies for immediate attention
+      const allergyItems = document.querySelectorAll('.allergy-severe');
+      allergyItems.forEach(item => {
+        item.style.animation = 'pulse 2s infinite';
+      });
+    });
+
+    // Add pulse animation for critical items
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+        70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9859598496ea48e7',t:'MTc1ODk1ODc5Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
