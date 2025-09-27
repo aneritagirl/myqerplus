@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MYQER EMS Portal</title>
+  <style>
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      background: #ffffff;
+      color: #1f2937;
+      line-height: 1.5;
+    }
+
+    /* Navigation */
+    .nav {
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 0 2rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 900;
+      color: #dc267f;
+      letter-spacing: 2px;
+    }
+
+    .nav-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .session-timer {
+      background: #dcfce7;
+      color: #166534;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .session-timer.amber {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .session-timer.red {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .service-badge {
+      background: #f3f4f6;
+      color: #6b7280;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid #d1d5db;
+    }
+
+    .dark-toggle {
+      background: #f3f4f6;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .dark-toggle:hover {
+      background: #e5e7eb;
+    }
+
+    .dark-toggle svg {
+      width: 20px;
+      height: 20px;
+      color: #6b7280;
+    }
+
+    /* Main Content */
+    .main {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+      min-height: calc(100vh - 64px - 60px);
+    }
+
+    .hero-section {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .search-container {
+      background: #f9fafb;
+      border: 2px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 3rem;
+      text-align: center;
+    }
+
+    .search-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 1rem;
+    }
+
+    .search-form {
+      display: flex;
+      gap: 1rem;
+      max-width: 500px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .code-success {
+      position: absolute;
+      right: -40px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #22c55e;
+      font-size: 24px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .code-success.show {
+      opacity: 1;
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 16px 20px;
+      border: 2px solid #d1d5db;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: #dc267f;
+      box-shadow: 0 0 0 3px rgba(220, 38, 127, 0.1);
+    }
+
+    .fetch-btn {
+      background: #13a567;
+      color: white;
+      border: none;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.1s;
+    }
+
+    .fetch-btn:hover {
+      background: #0f9458;
+      transform: translateY(-1px);
+    }
+
+    .fetch-btn:active {
+      transform: translateY(0);
+    }
+
+    .incident-panel {
+      background: white;
+      border: 2px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 1.5rem;
+      height: fit-content;
+    }
+
+    .incident-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .incident-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .incident-status {
+      background: #fef3c7;
+      color: #92400e;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .incident-info {
+      margin-bottom: 1.5rem;
+    }
+
+    .incident-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-size: 14px;
+    }
+
+    .incident-label {
+      color: #6b7280;
+      font-weight: 500;
+    }
+
+    .incident-value {
+      color: #111827;
+      font-weight: 600;
+    }
+
+    .units-list {
+      margin-bottom: 1.5rem;
+    }
+
+    .unit-item {
+      background: #f3f4f6;
+      padding: 8px 12px;
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+      font-size: 13px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .unit-status {
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .status-enroute {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .status-onscene {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .create-incident-btn {
+      background: #dc267f;
+      color: white;
+      border: none;
+      padding: 16px 24px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.2s;
+    }
+
+    .create-incident-btn:hover {
+      background: #be185d;
+    }
+
+    /* Patient Snapshot */
+    .patient-snapshot {
+      background: white;
+      border: 2px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 2rem;
+      margin-top: 2rem;
+      display: none;
+      grid-column: 1 / -1;
+    }
+
+    .patient-snapshot.show {
+      display: block;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .snapshot-header {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .triage-badge {
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .triage-green {
+      background: #dcfce7;
+      color: #166534;
+      border: 3px solid #22c55e;
+    }
+
+    .triage-amber {
+      background: #fef3c7;
+      color: #92400e;
+      border: 3px solid #f59e0b;
+    }
+
+    .triage-red {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 3px solid #ef4444;
+    }
+
+    .patient-basic-info {
+      flex: 1;
+    }
+
+    .patient-name {
+      font-size: 28px;
+      font-weight: 800;
+      color: #111827;
+      margin: 0 0 8px 0;
+    }
+
+    .patient-dob {
+      font-size: 18px;
+      color: #6b7280;
+      margin: 0;
+    }
+
+    .critical-info {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .critical-section {
+      background: #fef7f7;
+      border: 2px solid #fecaca;
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .critical-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #dc2626;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .critical-content {
+      font-size: 16px;
+      color: #111827;
+      line-height: 1.6;
+    }
+
+    .critical-item {
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      padding: 16px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background: #dc267f;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #be185d;
+    }
+
+    .btn-secondary {
+      background: #13a567;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #0f9458;
+    }
+
+    .btn-outline {
+      background: white;
+      color: #374151;
+      border-color: #d1d5db;
+    }
+
+    .btn-outline:hover {
+      background: #f9fafb;
+      border-color: #9ca3af;
+    }
+
+    /* Footer */
+    .footer {
+      background: #f9fafb;
+      border-top: 1px solid #e5e7eb;
+      padding: 1rem 2rem;
+      font-size: 12px;
+      color: #6b7280;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .access-status {
+      background: #fef3c7;
+      color: #92400e;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-section {
+        grid-template-columns: 1fr;
+      }
+
+      .search-form {
+        flex-direction: column;
+      }
+
+      .create-incident-card {
+        width: 100%;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+
+      .action-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-left">
+      <div class="logo">MYQER™</div>
+      <div class="nav-title">EMS Portal</div>
+    </div>
+    <div class="nav-right">
+      <div class="session-timer" id="sessionTimer">Session expires in 14 min</div>
+      <div class="service-badge">Ambulance Service – Daily PIN active</div>
+      <button class="dark-toggle" onclick="toggleDarkMode()" title="Toggle dark mode">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Offline Notice -->
+  <div id="offlineNotice" class="hidden" style="background: #fef3c7; color: #92400e; padding: 8px 2rem; text-align: center; font-size: 14px; font-weight: 600; border-bottom: 1px solid #f59e0b; position: sticky; top: 0; z-index: 50;">
+    ⚠️ Offline – You can still scan patient's physical QR card
+  </div>
+
+  <!-- Main Content -->
+  <main class="main">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="search-container">
+        <h1 class="search-title">Enter MYQER Code</h1>
+        <form class="search-form" onsubmit="fetchPatientData(event)">
+          <input 
+            type="text" 
+            class="search-input" 
+            placeholder="Enter MYQER code (e.g. 7H3K2P)"
+            maxlength="6"
+            id="myqerCode"
+            required
+          >
+          <button type="submit" class="fetch-btn">Fetch</button>
+          <div class="code-success" id="codeSuccess">✓</div>
+        </form>
+      </div>
+
+      <div class="incident-panel">
+        <div class="incident-header">
+          <h3 class="incident-title">Active Incident</h3>
+          <span class="incident-status">In Progress</span>
+        </div>
+        
+        <div class="incident-info">
+          <div class="incident-item">
+            <span class="incident-label">ID:</span>
+            <span class="incident-value">#2024-0312-001</span>
+          </div>
+          <div class="incident-item">
+            <span class="incident-label">Location:</span>
+            <span class="incident-value">High Street, M1 2AB</span>
+          </div>
+          <div class="incident-item">
+            <span class="incident-label">Time:</span>
+            <span class="incident-value">14:23</span>
+          </div>
+          <div class="incident-item">
+            <span class="incident-label">Type:</span>
+            <span class="incident-value">Medical Emergency</span>
+          </div>
+        </div>
+
+        <div class="units-list">
+          <h4 style="margin: 0 0 0.5rem 0; font-size: 14px; font-weight: 600; color: #374151;">Assigned Units</h4>
+          <div class="unit-item">
+            <span>AMB-401</span>
+            <span class="unit-status status-enroute">En Route</span>
+          </div>
+          <div class="unit-item">
+            <span>RRV-203</span>
+            <span class="unit-status status-onscene">On Scene</span>
+          </div>
+        </div>
+
+        <div class="status-legend" style="margin-bottom: 1rem; padding: 0.75rem; background: #f9fafb; border-radius: 8px;">
+          <h5 style="margin: 0 0 0.5rem 0; font-size: 12px; font-weight: 600; color: #6b7280;">Status Key</h5>
+          <div style="display: flex; gap: 1rem; font-size: 11px;">
+            <span style="display: flex; align-items: center; gap: 0.25rem;">
+              <div style="width: 8px; height: 8px; background: #3b82f6; border-radius: 50%;"></div>
+              En Route
+            </span>
+            <span style="display: flex; align-items: center; gap: 0.25rem;">
+              <div style="width: 8px; height: 8px; background: #22c55e; border-radius: 50%;"></div>
+              On Scene
+            </span>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="action-btn btn-outline" style="flex: 1; font-size: 12px; padding: 8px 12px;" onclick="shareToED()">Share to ED</button>
+          <button class="action-btn btn-outline" style="padding: 8px; min-width: 44px;" onclick="copyIncidentSummary()" title="Copy incident summary for radio">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+            </svg>
+          </button>
+          <button class="action-btn btn-outline" style="flex: 1; font-size: 12px; padding: 8px 12px;" onclick="addNotes()">Notes</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Patient Snapshot -->
+    <section class="patient-snapshot" id="patientSnapshot">
+      <div class="snapshot-header">
+        <div class="triage-badge triage-amber" id="triageBadge">Priority 2</div>
+        <div class="patient-basic-info">
+          <h2 class="patient-name">Sarah Johnson</h2>
+          <p class="patient-dob">DOB: 15/03/1985 (38 years) • Female • O+</p>
+        </div>
+      </div>
+
+      <div class="critical-info">
+        <div class="critical-section">
+          <h3 class="critical-title">
+            ⚠️ Critical Allergies
+          </h3>
+          <div class="critical-content">
+            <div class="critical-item">Penicillin - Anaphylaxis</div>
+            <div class="critical-item">Shellfish - Severe reaction</div>
+            <div class="critical-item">Latex - Contact dermatitis</div>
+          </div>
+        </div>
+
+        <div class="critical-section">
+          <h3 class="critical-title">
+            💊 Current Medications
+          </h3>
+          <div class="critical-content">
+            <div class="critical-item">Metformin 500mg - 2x daily</div>
+            <div class="critical-item">Lisinopril 10mg - Daily</div>
+            <div class="critical-item">Salbutamol inhaler - PRN</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="action-btn btn-outline" onclick="attachToIncident()">Attach to Incident</button>
+        <button class="action-btn btn-secondary" onclick="shareToCrew()">Share to Crew</button>
+        <button class="action-btn btn-outline" onclick="copyHandover()">Copy Handover Summary</button>
+        <button class="action-btn btn-outline" onclick="copyIncidentSummary()">Copy Incident Summary</button>
+        <button class="action-btn btn-outline" onclick="printSnapshot()">Print Snapshot</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-left">
+      <span class="access-status">Access logged — 15 min expiry</span>
+      <span>Session: DS-2024-0312-14:23</span>
+      <a href="#" onclick="viewAuditLog()" style="color: #6b7280; text-decoration: underline; font-size: 11px;">View audit details</a>
+    </div>
+    <div>
+      <span>MYQER EMS Portal - Confidential medical information. NHS Data Protection compliant.</span>
+    </div>
+  </footer>
+
+  <script>
+    function fetchPatientData(event) {
+      event.preventDefault();
+      const code = document.getElementById('myqerCode').value.toUpperCase();
+      
+      if (code.length === 6) {
+        // Show success checkmark
+        document.getElementById('codeSuccess').classList.add('show');
+        
+        // Simulate API call delay
+        setTimeout(() => {
+          document.getElementById('patientSnapshot').classList.add('show');
+          
+          // Scroll to patient snapshot
+          document.getElementById('patientSnapshot').scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }, 500);
+      }
+    }
+
+    function toggleDarkMode() {
+      alert('Dark mode toggle - would switch to dark theme for low-light control rooms.');
+    }
+
+    function shareToED() {
+      alert('Sharing incident details to Emergency Department. Hospital notified.');
+    }
+
+    function addNotes() {
+      alert('Opening incident notes... Dispatcher can add observations and updates.');
+    }
+
+    function attachToIncident() {
+      alert('Patient data attached to current incident. Incident #2024-0312-001 updated.');
+    }
+
+    function shareToCrew() {
+      alert('Patient snapshot shared with ambulance crew. Crew notified via mobile app.');
+    }
+
+    function copyHandover() {
+      const handoverText = `PATIENT HANDOVER - MYQER CODE: ${document.getElementById('myqerCode').value}
+      
+Name: Sarah Johnson, DOB: 15/03/1985 (38F)
+Blood Type: O+
+
+CRITICAL ALLERGIES:
+- Penicillin (Anaphylaxis)
+- Shellfish (Severe reaction)  
+- Latex (Contact dermatitis)
+
+CURRENT MEDICATIONS:
+- Metformin 500mg 2x daily
+- Lisinopril 10mg daily
+- Atorvastatin 20mg evening
+- Salbutamol inhaler PRN
+
+EMERGENCY CONTACTS:
+Primary: Mark Johnson (Husband) 07700 900123
+Secondary: Dr. Emma Wilson 07700 900456`;
+
+      navigator.clipboard.writeText(handoverText).then(() => {
+        alert('Handover information copied to clipboard. Ready to paste into incident notes.');
+      });
+    }
+
+    function copyIncidentSummary() {
+      const summaryText = `INCIDENT SUMMARY - ${new Date().toLocaleString()}
+      
+Incident ID: #2024-0312-001
+Location: High Street, M1 2AB
+Time: 14:23
+Type: Medical Emergency
+
+PATIENT: Sarah Johnson
+DOB: 15/03/1985 (38F)
+MYQER Code: ${document.getElementById('myqerCode').value}
+
+CRITICAL ALLERGIES:
+- Penicillin (Anaphylaxis)
+- Shellfish (Severe reaction)
+
+UNITS ASSIGNED:
+- AMB-401 (En Route)
+- RRV-203 (On Scene)`;
+
+      navigator.clipboard.writeText(summaryText).then(() => {
+        alert('Incident summary copied to clipboard. Ready for radio or SMS handover.');
+      });
+    }
+
+    function printSnapshot() {
+      window.print();
+    }
+
+    function viewAuditLog() {
+      alert('Opening audit log... Shows all access times, user IDs, and actions taken.');
+    }
+
+    // Session timer countdown
+    let sessionMinutes = 14;
+    const timerElement = document.getElementById('sessionTimer');
+    
+    setInterval(() => {
+      if (sessionMinutes > 0) {
+        timerElement.textContent = `Session expires in ${sessionMinutes} min`;
+        
+        // Color transitions: green (10+) → amber (5-9) → red (1-4) → expired (0)
+        if (sessionMinutes >= 10) {
+          timerElement.className = 'session-timer';
+        } else if (sessionMinutes >= 5) {
+          timerElement.className = 'session-timer amber';
+        } else if (sessionMinutes >= 1) {
+          timerElement.className = 'session-timer red';
+        }
+        
+        sessionMinutes--;
+      } else {
+        timerElement.textContent = 'Session expired';
+        timerElement.className = 'session-timer red';
+      }
+    }, 60000);
+
+    // Offline detection
+    window.addEventListener('online', () => {
+      document.getElementById('offlineNotice').classList.add('hidden');
+    });
+
+    window.addEventListener('offline', () => {
+      document.getElementById('offlineNotice').classList.remove('hidden');
+    });
+
+    // Keyboard accessibility
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && e.target.id === 'myqerCode') {
+        fetchPatientData(e);
+      }
+    });
+
+    // Auto-format MYQER code input
+    document.getElementById('myqerCode').addEventListener('input', function(e) {
+      e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    });
+  </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'985938c8754e63a8',t:'MTc1ODk1NzQ1MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
