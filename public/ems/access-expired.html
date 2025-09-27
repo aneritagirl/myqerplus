@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MYQER EMS Portal - Access Expired</title>
+  <style>
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+      background: #ffffff;
+      color: #1f2937;
+      line-height: 1.5;
+    }
+
+    /* Navigation */
+    .nav {
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 0 2rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 900;
+      color: #dc267f;
+      letter-spacing: 2px;
+    }
+
+    .nav-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .session-timer {
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .service-badge {
+      background: #f3f4f6;
+      color: #6b7280;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid #d1d5db;
+    }
+
+    .dark-toggle {
+      background: #f3f4f6;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .dark-toggle:hover {
+      background: #e5e7eb;
+    }
+
+    .dark-toggle svg {
+      width: 20px;
+      height: 20px;
+      color: #6b7280;
+    }
+
+    /* Main Content */
+    .main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+      min-height: calc(100vh - 64px - 60px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    /* Expired Section */
+    .expired-container {
+      background: #ffffff;
+      border: 2px solid #f3f4f6;
+      border-radius: 20px;
+      padding: 4rem 3rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+      max-width: 600px;
+      width: 100%;
+    }
+
+    .warning-icon {
+      font-size: 80px;
+      color: #ef4444;
+      margin-bottom: 2rem;
+      display: block;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .expired-title {
+      font-size: 32px;
+      font-weight: 800;
+      color: #111827;
+      margin: 0 0 1.5rem 0;
+      line-height: 1.2;
+    }
+
+    .expired-subtitle {
+      font-size: 18px;
+      color: #6b7280;
+      margin: 0 0 3rem 0;
+      line-height: 1.6;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Security Info */
+    .security-info {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .security-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #991b1b;
+      margin: 0 0 0.5rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .security-text {
+      font-size: 14px;
+      color: #7f1d1d;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .action-btn {
+      padding: 18px 32px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+      min-height: 60px;
+      min-width: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: #22c55e;
+      color: white;
+      border-color: #22c55e;
+    }
+
+    .btn-primary:hover {
+      background: #16a34a;
+      border-color: #16a34a;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    }
+
+    .btn-secondary {
+      background: #f8fafc;
+      color: #374151;
+      border-color: #d1d5db;
+    }
+
+    .btn-secondary:hover {
+      background: #f1f5f9;
+      border-color: #9ca3af;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Help Section */
+    .help-section {
+      margin-top: 3rem;
+      padding: 2rem;
+      background: #f8fafc;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .help-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #374151;
+      margin: 0 0 1rem 0;
+    }
+
+    .help-list {
+      text-align: left;
+      color: #6b7280;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .help-list li {
+      margin-bottom: 0.5rem;
+    }
+
+    /* Footer */
+    .footer {
+      background: #f9fafb;
+      border-top: 1px solid #e5e7eb;
+      padding: 1rem 2rem;
+      font-size: 12px;
+      color: #6b7280;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav {
+        flex-direction: column;
+        height: auto;
+        padding: 1rem;
+        gap: 1rem;
+      }
+
+      .main {
+        padding: 2rem 1rem;
+      }
+
+      .expired-container {
+        padding: 2rem 1.5rem;
+      }
+
+      .expired-title {
+        font-size: 24px;
+      }
+
+      .warning-icon {
+        font-size: 60px;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .action-btn {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .expired-container {
+        padding: 1.5rem 1rem;
+      }
+
+      .expired-title {
+        font-size: 20px;
+      }
+
+      .expired-subtitle {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-left">
+      <div class="logo">MYQER™</div>
+      <div class="nav-title">EMS Portal</div>
+    </div>
+    <div class="nav-right">
+      <div class="session-timer">Session expired</div>
+      <div class="service-badge">Ambulance Service – Daily PIN active</div>
+      <button class="dark-toggle" onclick="toggleDarkMode()" title="Toggle dark mode">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main">
+    <div class="expired-container">
+      <div class="warning-icon">🔴</div>
+      
+      <h1 class="expired-title">Session Expired</h1>
+      
+      <p class="expired-subtitle">
+        This secure link is no longer active. Ask control for a new link or scan the patient's physical QR card.
+      </p>
+
+      <div class="security-info">
+        <h3 class="security-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1Z"/>
+          </svg>
+          Security Timeout
+        </h3>
+        <p class="security-text">
+          For patient privacy and data protection, secure medical links automatically expire after 15 minutes of inactivity. This ensures confidential information remains protected.
+        </p>
+      </div>
+
+      <div class="action-buttons">
+        <button class="action-btn btn-primary" onclick="requestNewLink()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"/>
+          </svg>
+          Request New Link
+        </button>
+        
+        <button class="action-btn btn-secondary" onclick="backToPortal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"/>
+          </svg>
+          Back to EMS Portal
+        </button>
+      </div>
+
+      <div class="help-section">
+        <h3 class="help-title">What to do next:</h3>
+        <ul class="help-list">
+          <li><strong>Request new link:</strong> Contact control room for a fresh secure link to this patient</li>
+          <li><strong>Scan QR card:</strong> Use the patient's physical MYQER card or wristband QR code</li>
+          <li><strong>Search by code:</strong> Return to portal and enter the 6-character MYQER code manually</li>
+          <li><strong>Name search:</strong> Use the Name + DOB search if no MYQER code is available</li>
+          <li><strong>Emergency access:</strong> Contact control immediately for urgent patient information</li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <span>MYQER EMS Portal – Confidential medical information</span>
+  </footer>
+
+  <script>
+    function requestNewLink() {
+      if (confirm('Request new secure link?\n\nThis will contact the control room to generate a fresh link for this patient record.\n\nControl will send the new link via your secure messaging system.')) {
+        alert('Requesting new link...\n\n📡 Contacting control room\n🔐 Generating secure link\n📱 Link will be sent to your device\n\nIn a real system, this would:\n• Send request to control room\n• Generate new secure session\n• Deliver link via secure messaging\n• Log the access request');
+      }
+    }
+
+    function backToPortal() {
+      if (confirm('Return to EMS Portal?\n\nThis will take you back to the main portal where you can:\n• Enter a MYQER code\n• Search by Name + DOB\n• Access other patient records')) {
+        alert('Returning to EMS Portal...\n\nIn a real system, this would navigate back to the main portal dashboard.');
+      }
+    }
+
+    function toggleDarkMode() {
+      alert('Dark mode toggle - would switch to dark theme for low-light ambulance environments.');
+    }
+
+    // Show current time for reference
+    document.addEventListener('DOMContentLoaded', function() {
+      const now = new Date();
+      const timeString = now.toLocaleTimeString();
+      console.log(`Session expired at: ${timeString}`);
+    });
+
+    // Keyboard accessibility
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        requestNewLink();
+      } else if (e.key === 'Escape') {
+        backToPortal();
+      }
+    });
+
+    // Prevent any form of navigation that might expose expired session
+    window.addEventListener('beforeunload', function(e) {
+      // In a real application, you might want to clear any cached data here
+      console.log('Clearing expired session data...');
+    });
+  </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'985971b982bdf8ba',t:'MTc1ODk1OTc4NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
